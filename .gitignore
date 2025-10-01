@@ -1,3 +1,7 @@
+# Environment files
+.env
+.env.local
+
 # Logs
 logs
 *.log
@@ -22,3 +26,21 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Testing
+coverage
+.nyc_output
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+backend/.env
+
+# OS
+Thumbs.db

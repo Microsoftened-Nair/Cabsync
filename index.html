@@ -4,7 +4,25 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+    <title>RideMeta • Compare Rides</title>
+    <script>
+      (function () {
+        try {
+          var storage = localStorage.getItem('ridemeta-theme');
+          var root = document.documentElement;
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = storage ? JSON.parse(storage) : (prefersDark ? 'dark' : 'light');
+          if (theme !== 'light' && theme !== 'dark') theme = 'dark';
+          root.classList.remove('light', 'dark');
+          root.classList.add(theme);
+          root.dataset.theme = theme;
+          root.style.colorScheme = theme;
+        } catch (error) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.style.colorScheme = 'dark';
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

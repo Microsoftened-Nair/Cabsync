@@ -1,5 +1,5 @@
 {
-  "name": "cabsync",
+  "name": "ridemeta",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,21 +7,47 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "backend": "cd backend && python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000",
+    "dev:full": "concurrently \"npm run backend\" \"npm run dev\"",
+    "test": "vitest",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "@tanstack/react-query": "^5.28.4",
+    "clsx": "^2.1.0",
+    "date-fns": "^3.6.0",
+    "framer-motion": "^11.0.14",
+    "gsap": "^3.13.0",
+    "lucide-react": "^0.363.0",
+    "mapbox-gl": "^3.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.51.1",
+    "react-router-dom": "^6.22.3",
+    "tailwind-merge": "^2.2.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
-    "@types/react": "^19.1.10",
-    "@types/react-dom": "^19.1.7",
+    "@playwright/test": "^1.42.1",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.1",
+    "@types/mapbox-gl": "^3.1.0",
+    "@types/react": "^18.2.79",
+    "@types/react-dom": "^18.2.25",
     "@vitejs/plugin-react": "^5.0.0",
+    "autoprefixer": "^10.4.19",
+    "concurrently": "^8.2.2",
     "eslint": "^9.33.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
-    "vite": "^7.1.2"
+    "jsdom": "^27.0.0",
+    "postcss": "^8.4.38",
+    "prettier": "^3.2.5",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.4.3",
+    "vite": "^7.1.2",
+    "vitest": "^1.4.0"
   }
 }

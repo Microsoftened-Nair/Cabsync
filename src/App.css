@@ -1,42 +1,76 @@
-#root {
-  max-width: 1280px;
+/* App-specific styles */
+.container {
+  max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Dark theme root selector */
+.dark {
+  --background: 11 16 32;
+  --surface: 15 23 36;
+  --muted: 148 163 184;
+  --accent: 124 58 237;
+  --success: 16 185 129;
+  --danger: 239 68 68;
+  --border: 30 41 59;
+  --text-primary: 241 245 249;
+  --text-secondary: 148 163 184;
 }
 
-@keyframes logo-spin {
+/* Light theme root selector */
+.light {
+  --background: 255 255 255;
+  --surface: 248 250 252;
+  --muted: 100 116 139;
+  --accent: 139 92 246;
+  --success: 16 185 129;
+  --danger: 239 68 68;
+  --border: 226 232 240;
+  --text-primary: 15 23 42;
+  --text-secondary: 100 116 139;
+}
+
+/* Utility classes */
+.animate-fade-in {
+  animation: fadeIn 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.animate-slide-up {
+  animation: slideUp 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes fadeIn {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
