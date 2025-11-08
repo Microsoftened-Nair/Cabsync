@@ -10,6 +10,7 @@ export interface RideRequest {
   dropoff: Location;
   when?: Date;
   vehicleType?: VehicleType;
+  seaterCapacity?: number;
 }
 
 export type RideProvider = 'uber' | 'ola' | 'rapido' | 'indrive';
@@ -46,7 +47,7 @@ export interface CompareResponse {
   };
 }
 
-export type VehicleType = 'auto' | 'bike' | 'car';
+export type VehicleType = 'auto' | 'bike' | 'car' | 'car-4' | 'car-6' | 'suv';
 
 export type SortOption = 'cheapest' | 'fastest' | 'recommended';
 

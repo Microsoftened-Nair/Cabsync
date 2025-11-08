@@ -1,0 +1,40 @@
+@startuml freelance_flow_horizontal
+left to right direction
+' Styling
+skinparam shadowing true
+skinparam roundcorner 8
+skinparam ArrowColor #333333
+skinparam ArrowFontSize 12
+skinparam NoteBackgroundColor #FDF6E3
+skinparam NoteBorderColor #B58900
+
+title Freelancer — Platform — Client (work & payment flow)
+
+actor "Freelancer" as F
+rectangle "Platform\n(Web / Mobile)" as P #DDDDFF
+actor "Client" as C
+
+' Top sourcing arrows (horizontal)
+F -[#1E90FF]-> P : Work sourced\nonline
+C -[#1E90FF]-> P : Work sourced\nonline
+
+' Work delivery flow
+P -[#228B22]-> F : Work completed\nonline
+P -[#228B22]-> C : Work delivered\nonline
+
+' Money flow
+C -[#8B0000]-> P : Money paid\nby client
+P -[#8B0000]-> F : Money delivered to\nfreelancer (after platform's cut)
+
+' Optional descriptive notes
+note left of F
+  Freelancer finds and accepts
+  projects via the platform.
+end note
+
+note right of C
+  Client posts projects
+  and pays through the platform.
+end note
+
+@enduml

@@ -6,7 +6,7 @@ import { useLocationSearch } from '../hooks/useLocationSearch';
 import { Location, VehicleType } from '../types';
 
 interface SearchCardProps {
-  onSearch: (pickup: Location, dropoff: Location, vehicleType?: VehicleType) => void;
+  onSearch: (pickup: Location, dropoff: Location, vehicleType?: VehicleType, seaterCapacity?: number) => void;
   isLoading?: boolean;
   className?: string;
 }
@@ -15,6 +15,7 @@ export function SearchCard({ onSearch, isLoading = false, className = '' }: Sear
   const [pickup, setPickup] = useState<Location | null>(null);
   const [dropoff, setDropoff] = useState<Location | null>(null);
   const [vehicleType, setVehicleType] = useState<VehicleType>('auto');
+  const [seaterCapacity, setSeaterCapacity] = useState<number | undefined>(undefined);
 
   const pickupSearch = useLocationSearch({
     onLocationSelect: setPickup,
@@ -27,7 +28,7 @@ export function SearchCard({ onSearch, isLoading = false, className = '' }: Sear
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (pickup && dropoff) {
-      onSearch(pickup, dropoff, vehicleType);
+      onSearch(pickup, dropoff, vehicleType, seaterCapacity);
     }
   };
 
@@ -151,7 +152,13 @@ export function SearchCard({ onSearch, isLoading = false, className = '' }: Sear
                 <button
                   key={type}
                   type="button"
-                  onClick={() => setVehicleType(type)}
+                  onClick={() => {
+                    setVehicleType(type);
+                    // Reset seater capacity when changing vehicle type
+                    if (type !== 'car') {
+                      setSeaterCapacity(undefined);
+                    }
+                  }}
                   className={`p-3 rounded-lg border transition-all duration-200 ${
                     vehicleType === type
                       ? 'border-accent bg-accent/10 text-accent'
@@ -165,6 +172,56 @@ export function SearchCard({ onSearch, isLoading = false, className = '' }: Sear
               ))}
             </div>
           </div>
+
+          {/* Seater Capacity (only for cars) */}
+          {vehicleType === 'car' && (
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-text-primary">
+                Seater Capacity (Optional)
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setSeaterCapacity(undefined)}
+                  className={`p-3 rounded-lg border transition-all duration-200 ${
+                    seaterCapacity === undefined
+                      ? 'border-accent bg-accent/10 text-accent'
+                      : 'border-border hover:border-accent/50 text-text-secondary'
+                  }`}
+                >
+                  <div className="text-center">
+                    <div className="text-sm font-medium">All</div>
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSeaterCapacity(4)}
+                  className={`p-3 rounded-lg border transition-all duration-200 ${
+                    seaterCapacity === 4
+                      ? 'border-accent bg-accent/10 text-accent'
+                      : 'border-border hover:border-accent/50 text-text-secondary'
+                  }`}
+                >
+                  <div className="text-center">
+                    <div className="text-sm font-medium">4 Seater</div>
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSeaterCapacity(6)}
+                  className={`p-3 rounded-lg border transition-all duration-200 ${
+                    seaterCapacity === 6
+                      ? 'border-accent bg-accent/10 text-accent'
+                      : 'border-border hover:border-accent/50 text-text-secondary'
+                  }`}
+                >
+                  <div className="text-center">
+                    <div className="text-sm font-medium">6 Seater</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Submit Button */}
           <Button

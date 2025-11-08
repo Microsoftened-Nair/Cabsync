@@ -10,11 +10,17 @@ export default function RidesPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSearch = async (pickup: Location, dropoff: Location, vehicleType?: VehicleType) => {
+  const handleSearch = async (pickup: Location, dropoff: Location, vehicleType?: VehicleType, seaterCapacity?: number) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await rideService.compareRides({ pickup, dropoff, vehicleType, when: new Date() });
+      const response = await rideService.compareRides({ 
+        pickup, 
+        dropoff, 
+        vehicleType, 
+        seaterCapacity,
+        when: new Date() 
+      });
       setResults(response.results);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch ride data');
