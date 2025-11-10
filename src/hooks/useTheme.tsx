@@ -10,7 +10,7 @@ interface ThemeProviderProps {
 }
 
 function getStoredTheme(): Theme | null {
-  const stored = getStorageItem('ridemeta-theme');
+  const stored = getStorageItem('cabsync-theme');
   return stored === 'light' || stored === 'dark' ? stored : null;
 }
 
@@ -45,9 +45,9 @@ export function ThemeProvider({ children, defaultTheme = 'dark' }: ThemeProvider
       root.style.colorScheme = nextTheme;
 
       if (hasUserPreference) {
-        setStorageItem('ridemeta-theme', nextTheme);
+        setStorageItem('cabsync-theme', nextTheme);
       } else {
-        removeStorageItem('ridemeta-theme');
+        removeStorageItem('cabsync-theme');
       }
     }
   }, [theme, hasUserPreference]);

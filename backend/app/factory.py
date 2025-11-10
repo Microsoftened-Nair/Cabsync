@@ -20,7 +20,7 @@ from models.ride import (
     RideResult,
     Price,
     Eta,
-    RideMeta,
+    cabsync,
 )
 from services.aggregator import RideAggregator
 from services.registry import build_platform_registry
@@ -149,7 +149,7 @@ def create_app() -> FastAPI:
                             eta=Eta(seconds=eta_seconds, text=eta_text),
                             distance=0,  # Not provided in callback
                             deep_link=f"nammayatri://ride/{item.get('id', '')}",
-                            meta=RideMeta(
+                            meta=cabsync(
                                 vehicle_capacity=3 if "auto" in service_name.lower() else 4,
                                 rating=4.5,  # Default rating
                                 co2_estimate=0.12,

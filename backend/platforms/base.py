@@ -5,7 +5,7 @@ from math import atan2, cos, radians, sin, sqrt
 from random import Random
 from typing import List
 
-from models.ride import Eta, Price, RideMeta, RideRequest, RideResult
+from models.ride import Eta, Price, cabsync, RideRequest, RideResult
 
 
 class MockDataProvider:
@@ -82,7 +82,7 @@ class MockDataProvider:
             rating = variant.get("rating")
             meta = None
             if any(value is not None for value in (vehicle_capacity, rating, co2_estimate)):
-                meta = RideMeta(
+                meta = cabsync(
                     vehicle_capacity=vehicle_capacity,
                     rating=rating,
                     co2_estimate=co2_estimate,

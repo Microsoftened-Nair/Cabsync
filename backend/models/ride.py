@@ -47,7 +47,7 @@ class Eta(CamelModel):
     text: str
 
 
-class RideMeta(CamelModel):
+class cabsync(CamelModel):
     vehicle_capacity: Optional[int] = None
     rating: Optional[float] = None
     co2_estimate: Optional[float] = None
@@ -61,7 +61,7 @@ class RideResult(CamelModel):
     distance: int
     deep_link: str = Field(default="", alias="deepLink")
     surge: Optional[float] = None
-    meta: Optional[RideMeta] = None
+    meta: Optional[cabsync] = None
 
 
 class ResponseMeta(CamelModel):

@@ -1,6 +1,6 @@
-# RideMeta Demo Guide
+# cabsync Demo Guide
 
-🎉 **Congratulations!** Your RideMeta ride aggregator is now running!
+🎉 **Congratulations!** Your cabsync ride aggregator is now running!
 
 ## 🚀 What's Running
 

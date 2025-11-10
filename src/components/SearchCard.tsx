@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/Card';
 import { Input } from './ui/Input';
 import { Button } from './ui/Button';
+import { MapPicker } from './MapPicker';
 import { useLocationSearch } from '../hooks/useLocationSearch';
 import { Location, VehicleType } from '../types';
 
@@ -16,6 +17,8 @@ export function SearchCard({ onSearch, isLoading = false, className = '' }: Sear
   const [dropoff, setDropoff] = useState<Location | null>(null);
   const [vehicleType, setVehicleType] = useState<VehicleType>('auto');
   const [seaterCapacity, setSeaterCapacity] = useState<number | undefined>(undefined);
+  const [showPickupMap, setShowPickupMap] = useState(false);
+  const [showDropoffMap, setShowDropoffMap] = useState(false);
 
   const pickupSearch = useLocationSearch({
     onLocationSelect: setPickup,
@@ -30,6 +33,16 @@ export function SearchCard({ onSearch, isLoading = false, className = '' }: Sear
     if (pickup && dropoff) {
       onSearch(pickup, dropoff, vehicleType, seaterCapacity);
     }
+  };
+
+  const handlePickupFromMap = (location: Location) => {
+    setPickup(location);
+    pickupSearch.setQuery(location.address);
+  };
+
+  const handleDropoffFromMap = (location: Location) => {
+    setDropoff(location);
+    dropoffSearch.setQuery(location.address);
   };
 
   const canSubmit = pickup && dropoff && !isLoading;
@@ -55,25 +68,40 @@ export function SearchCard({ onSearch, isLoading = false, className = '' }: Sear
               onFocus={() => pickupSearch.setIsOpen(true)}
               icon={<LocationIcon />}
               rightIcon={
-                pickupSearch.query && (
+                <div className="flex items-center space-x-1">
+                  {pickupSearch.query && (
+                    <button
+                      type="button"
+                      onClick={pickupSearch.clearSearch}
+                      className="hover:text-text-primary transition-colors"
+                    >
+                      <XIcon className="h-4 w-4" />
+                    </button>
+                  )}
                   <button
                     type="button"
-                    onClick={pickupSearch.clearSearch}
-                    className="hover:text-text-primary transition-colors"
+                    onClick={() => setShowPickupMap(true)}
+                    className="p-1 hover:bg-accent/10 rounded transition-colors"
+                    title="Select on map"
                   >
-                    <XIcon className="h-4 w-4" />
+                    <MapIcon className="h-4 w-4 text-accent" />
                   </button>
-                )
+                </div>
               }
             />
             
             {/* Pickup Suggestions */}
-            {pickupSearch.isOpen && (pickupSearch.suggestions.length > 0 || pickupSearch.isLoading) && (
+            {pickupSearch.isOpen && (pickupSearch.suggestions.length > 0 || pickupSearch.isLoading || (pickupSearch.query && pickupSearch.query.length < 3)) && (
               <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-surface border border-border rounded-lg shadow-lg max-h-64 overflow-y-auto">
                 {pickupSearch.isLoading && (
                   <div className="p-3 text-text-secondary text-sm flex items-center space-x-2">
                     <LoadingIcon className="h-4 w-4 animate-spin" />
                     <span>Searching...</span>
+                  </div>
+                )}
+                {!pickupSearch.isLoading && pickupSearch.query && pickupSearch.query.length < 3 && (
+                  <div className="p-3 text-text-secondary text-sm">
+                    Type at least 3 characters to search...
                   </div>
                 )}
                 {pickupSearch.suggestions.map((location, index) => (
@@ -105,25 +133,40 @@ export function SearchCard({ onSearch, isLoading = false, className = '' }: Sear
               onFocus={() => dropoffSearch.setIsOpen(true)}
               icon={<LocationIcon />}
               rightIcon={
-                dropoffSearch.query && (
+                <div className="flex items-center space-x-1">
+                  {dropoffSearch.query && (
+                    <button
+                      type="button"
+                      onClick={dropoffSearch.clearSearch}
+                      className="hover:text-text-primary transition-colors"
+                    >
+                      <XIcon className="h-4 w-4" />
+                    </button>
+                  )}
                   <button
                     type="button"
-                    onClick={dropoffSearch.clearSearch}
-                    className="hover:text-text-primary transition-colors"
+                    onClick={() => setShowDropoffMap(true)}
+                    className="p-1 hover:bg-accent/10 rounded transition-colors"
+                    title="Select on map"
                   >
-                    <XIcon className="h-4 w-4" />
+                    <MapIcon className="h-4 w-4 text-accent" />
                   </button>
-                )
+                </div>
               }
             />
             
             {/* Dropoff Suggestions */}
-            {dropoffSearch.isOpen && (dropoffSearch.suggestions.length > 0 || dropoffSearch.isLoading) && (
+            {dropoffSearch.isOpen && (dropoffSearch.suggestions.length > 0 || dropoffSearch.isLoading || (dropoffSearch.query && dropoffSearch.query.length < 3)) && (
               <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-surface border border-border rounded-lg shadow-lg max-h-64 overflow-y-auto">
                 {dropoffSearch.isLoading && (
                   <div className="p-3 text-text-secondary text-sm flex items-center space-x-2">
                     <LoadingIcon className="h-4 w-4 animate-spin" />
                     <span>Searching...</span>
+                  </div>
+                )}
+                {!dropoffSearch.isLoading && dropoffSearch.query && dropoffSearch.query.length < 3 && (
+                  <div className="p-3 text-text-secondary text-sm">
+                    Type at least 3 characters to search...
                   </div>
                 )}
                 {dropoffSearch.suggestions.map((location, index) => (
@@ -244,6 +287,25 @@ export function SearchCard({ onSearch, isLoading = false, className = '' }: Sear
           </div>
         )}
       </CardContent>
+
+      {/* Map Modals */}
+      {showPickupMap && (
+        <MapPicker
+          initialLocation={pickup || undefined}
+          onLocationSelect={handlePickupFromMap}
+          onClose={() => setShowPickupMap(false)}
+          title="Select Pickup Location"
+        />
+      )}
+
+      {showDropoffMap && (
+        <MapPicker
+          initialLocation={dropoff || undefined}
+          onLocationSelect={handleDropoffFromMap}
+          onClose={() => setShowDropoffMap(false)}
+          title="Select Drop-off Location"
+        />
+      )}
     </Card>
   );
 }
@@ -296,6 +358,19 @@ function LoadingIcon({ className }: { className?: string }) {
         className="opacity-75"
         fill="currentColor"
         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+      />
+    </svg>
+  );
+}
+
+function MapIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
       />
     </svg>
   );

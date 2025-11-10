@@ -19,7 +19,7 @@ from models.ride import (
     Price,
     RideRequest,
     RideResult,
-    RideMeta,
+    cabsync,
     TransactionState,
     TransactionStatus,
     transaction_store,

@@ -73,7 +73,7 @@ export default function RidesPage() {
       <footer className="border-t border-border bg-surface/50 py-8">
         <div className="container mx-auto px-4 text-center">
           <p className="text-text-secondary text-sm">Made with ❤️ to help you find the best ride options</p>
-          <p className="text-text-secondary text-xs mt-2">RideMeta • Compare rides across multiple platforms</p>
+          <p className="text-text-secondary text-xs mt-2">cabsync • Compare rides across multiple platforms</p>
         </div>
       </footer>
     </div>

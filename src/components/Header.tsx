@@ -18,7 +18,7 @@ export function Header({ onSearchFocus }: HeaderProps) {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent text-white font-bold text-sm">
               R
             </div>
-            <span className="text-xl font-bold text-text-primary">RideMeta</span>
+            <span className="text-xl font-bold text-text-primary">cabsync</span>
           </Link>
 
           {/* Quick Search - Hidden on mobile, shown on larger screens */}

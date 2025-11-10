@@ -1,25 +1,37 @@
 import { useState, useRef, useEffect } from 'react';
 import { debounce } from '../utils';
-import { Location, MapboxFeature } from '../types';
+import { searchLocations } from '../services/geocoding';
+import { Location } from '../types';
 
 interface UseLocationSearchProps {
   onLocationSelect?: (location: Location) => void;
   delay?: number;
 }
 
-export function useLocationSearch({ onLocationSelect, delay = 300 }: UseLocationSearchProps = {}) {
+export function useLocationSearch({ onLocationSelect, delay = 600 }: UseLocationSearchProps = {}) {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState<Location[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const lastQueryRef = useRef<string>('');
 
-  const searchLocations = async (searchQuery: string) => {
-    if (!searchQuery.trim()) {
+  const performSearch = async (searchQuery: string) => {
+    const trimmedQuery = searchQuery.trim();
+    
+    // Don't search if query is too short or hasn't changed
+    if (trimmedQuery.length < 3) {
       setSuggestions([]);
       setIsLoading(false);
       return;
     }
+
+    // Skip if query hasn't changed
+    if (trimmedQuery === lastQueryRef.current) {
+      return;
+    }
+
+    lastQueryRef.current = trimmedQuery;
 
     // Cancel previous request
     if (abortControllerRef.current) {
@@ -30,39 +42,16 @@ export function useLocationSearch({ onLocationSelect, delay = 300 }: UseLocation
     setIsLoading(true);
 
     try {
-      const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
+      const locations = await searchLocations(trimmedQuery, {
+        proximity: [77.2090, 28.6139], // Default to Delhi
+        country: 'in',
+        limit: 5,
+      });
       
-      if (!mapboxToken || import.meta.env.VITE_MODE === 'MOCK') {
-        // Use mock data in development
-        const mockResults = generateMockSuggestions(searchQuery);
-        setSuggestions(mockResults);
-        setIsLoading(false);
-        return;
+      // Only update if this is still the current query
+      if (trimmedQuery === lastQueryRef.current) {
+        setSuggestions(locations);
       }
-
-      const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(searchQuery)}.json?` +
-        new URLSearchParams({
-          access_token: mapboxToken,
-          country: 'IN',
-          types: 'place,postcode,address,poi',
-          limit: '5',
-          proximity: '77.2090,28.6139', // Delhi coordinates as default
-        }),
-        { signal: abortControllerRef.current.signal }
-      );
-
-      if (!response.ok) throw new Error('Search failed');
-
-      const data = await response.json();
-      const locations: Location[] = data.features.map((feature: MapboxFeature) => ({
-        lat: feature.center[1],
-        lng: feature.center[0],
-        address: feature.place_name,
-        placeId: feature.id,
-      }));
-
-      setSuggestions(locations);
     } catch (error) {
       if (error instanceof Error && error.name !== 'AbortError') {
         console.error('Location search error:', error);
@@ -73,7 +62,7 @@ export function useLocationSearch({ onLocationSelect, delay = 300 }: UseLocation
     }
   };
 
-  const debouncedSearch = debounce(searchLocations, delay);
+  const debouncedSearch = debounce(performSearch, delay);
 
   useEffect(() => {
     debouncedSearch(query);
@@ -83,6 +72,7 @@ export function useLocationSearch({ onLocationSelect, delay = 300 }: UseLocation
     setQuery(location.address);
     setIsOpen(false);
     setSuggestions([]);
+    lastQueryRef.current = location.address;
     onLocationSelect?.(location);
   };
 
@@ -90,6 +80,7 @@ export function useLocationSearch({ onLocationSelect, delay = 300 }: UseLocation
     setQuery('');
     setSuggestions([]);
     setIsOpen(false);
+    lastQueryRef.current = '';
   };
 
   return {
@@ -102,23 +93,4 @@ export function useLocationSearch({ onLocationSelect, delay = 300 }: UseLocation
     handleLocationSelect,
     clearSearch,
   };
-}
-
-function generateMockSuggestions(query: string): Location[] {
-  const mockLocations = [
-    { lat: 28.6139, lng: 77.2090, address: 'Connaught Place, New Delhi' },
-    { lat: 28.5355, lng: 77.3910, address: 'Noida City Centre, Noida' },
-    { lat: 28.4595, lng: 77.0266, address: 'Cyber Hub, Gurugram' },
-    { lat: 28.6692, lng: 77.4538, address: 'Akshardham Temple, Delhi' },
-    { lat: 28.5274, lng: 77.2065, address: 'Hauz Khas Village, Delhi' },
-    { lat: 28.6508, lng: 77.2311, address: 'Karol Bagh, Delhi' },
-    { lat: 28.6304, lng: 77.2177, address: 'India Gate, New Delhi' },
-    { lat: 28.6562, lng: 77.2410, address: 'Red Fort, Delhi' },
-  ];
-
-  return mockLocations
-    .filter(location => 
-      location.address.toLowerCase().includes(query.toLowerCase())
-    )
-    .slice(0, 5);
 }

@@ -108,7 +108,7 @@ function AppContent() {
             Made with ❤️ to help you find the best ride options
           </p>
           <p className="text-text-secondary text-xs mt-2">
-            RideMeta • Compare rides across multiple platforms
+            cabsync • Compare rides across multiple platforms
           </p>
         </div>
       </footer>
