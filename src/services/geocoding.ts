@@ -1,6 +1,7 @@
 import { Location } from '../types';
 
 const NOMINATIM_BASE_URL = 'https://nominatim.openstreetmap.org';
+const PHOTON_BASE_URL = 'https://photon.komoot.io/api';
 const USER_AGENT = 'CabSync-App/1.0';
 
 // Cache for search results
@@ -29,61 +30,34 @@ export async function searchLocations(
     return [];
   }
 
-  // Check cache first
-  const cacheKey = `${trimmedQuery}-${options.country || 'in'}`;
+  const limit = options.limit || 5;
+  const cacheKey = JSON.stringify({
+    query: trimmedQuery,
+    country: options.country || 'in',
+    proximity: options.proximity || null,
+    limit,
+  });
+
   const cached = searchCache.get(cacheKey);
   if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
     return cached.results;
   }
 
   try {
-    const params = new URLSearchParams({
-      format: 'json',
-      q: trimmedQuery,
-      countrycodes: options.country || 'in',
-      limit: String(options.limit || 10), // Get more for better filtering
-      addressdetails: '1',
-    });
+    const [photonResults, nominatimResults] = await Promise.all([
+      fetchPhotonSuggestions(trimmedQuery, options).catch(() => []),
+      fetchNominatimSuggestions(trimmedQuery, options).catch(() => []),
+    ]);
 
-    // Add proximity for better results
-    if (options.proximity) {
-      params.append('viewbox', `${options.proximity[0] - 1},${options.proximity[1] - 1},${options.proximity[0] + 1},${options.proximity[1] + 1}`);
-      params.append('bounded', '0');
-    }
+    const mergedResults = mergeAndRankResults([
+      ...photonResults,
+      ...nominatimResults,
+    ], trimmedQuery, limit);
 
-    const response = await fetch(
-      `${NOMINATIM_BASE_URL}/search?${params}`,
-      {
-        headers: {
-          'User-Agent': USER_AGENT,
-        }
-      }
-    );
+    const finalResults = mergedResults.length > 0
+      ? mergedResults
+      : generateMockSuggestions(trimmedQuery);
 
-    if (!response.ok) {
-      throw new Error(`Geocoding API error: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    
-    // Map and score results
-    let locations = data.map((item: any) => ({
-      lat: parseFloat(item.lat),
-      lng: parseFloat(item.lon),
-      address: item.display_name,
-      placeId: item.place_id?.toString(),
-      _raw: item, // Keep raw data for scoring
-    }));
-
-    // Score and filter results for relevance
-    locations = scoreAndFilterResults(locations, trimmedQuery);
-
-    // Remove raw data and limit results
-    const finalResults = locations
-      .map(({ _raw, ...location }: any) => location)
-      .slice(0, options.limit || 5);
-
-    // Cache results
     searchCache.set(cacheKey, {
       results: finalResults,
       timestamp: Date.now(),
@@ -96,6 +70,153 @@ export async function searchLocations(
   }
 }
 
+async function fetchPhotonSuggestions(
+  query: string,
+  options: { proximity?: [number, number]; limit?: number; country?: string }
+): Promise<any[]> {
+  const params = new URLSearchParams({
+    q: query,
+    lang: 'en',
+    limit: String((options.limit || 5) * 2),
+  });
+
+  if (options.proximity) {
+    params.append('lat', String(options.proximity[1]));
+    params.append('lon', String(options.proximity[0]));
+  }
+
+  const response = await fetch(`${PHOTON_BASE_URL}?${params}`);
+  if (!response.ok) {
+    throw new Error(`Photon API error: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  const features = data?.features || [];
+
+  return features
+    .map((feature: any) => {
+      const properties = feature.properties || {};
+      const geometry = feature.geometry || {};
+      const coordinates = geometry.coordinates || [];
+      const [lng, lat] = coordinates;
+
+      if (typeof lat !== 'number' || typeof lng !== 'number') {
+        return null;
+      }
+
+      if (options.country && properties.countrycode && properties.countrycode.toLowerCase() !== options.country.toLowerCase()) {
+        return null;
+      }
+
+      const parts = [
+        properties.name,
+        properties.street,
+        properties.suburb,
+        properties.city,
+        properties.state,
+        properties.postcode,
+        properties.country,
+      ]
+        .filter(Boolean)
+        .map((part: string) => part.trim());
+
+      const uniqueParts = Array.from(new Set(parts));
+      const address = uniqueParts.join(', ');
+
+      if (!address) {
+        return null;
+      }
+
+      return {
+        lat,
+        lng,
+        address,
+        placeId: properties.osm_id ? `${properties.osm_type || 'osm'}-${properties.osm_id}` : undefined,
+        _raw: {
+          source: 'photon',
+          properties,
+          importance: properties?.extent ? 0.6 : 0.3,
+        },
+      };
+    })
+    .filter(Boolean);
+}
+
+async function fetchNominatimSuggestions(
+  query: string,
+  options: { proximity?: [number, number]; country?: string; limit?: number }
+): Promise<any[]> {
+  const params = new URLSearchParams({
+    format: 'jsonv2',
+    q: query,
+    addressdetails: '1',
+    namedetails: '1',
+    extratags: '1',
+    dedupe: '1',
+    limit: String((options.limit || 5) * 2),
+  });
+
+  if (options.country) {
+    params.append('countrycodes', options.country);
+  }
+
+  if (options.proximity) {
+    params.append('viewbox', `${options.proximity[0] - 1},${options.proximity[1] - 1},${options.proximity[0] + 1},${options.proximity[1] + 1}`);
+    params.append('bounded', '0');
+  }
+
+  const response = await fetch(
+    `${NOMINATIM_BASE_URL}/search?${params}`,
+    {
+      headers: {
+        'User-Agent': USER_AGENT,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`Nominatim API error: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+
+  return data.map((item: any) => ({
+    lat: parseFloat(item.lat),
+    lng: parseFloat(item.lon),
+    address: item.display_name,
+    placeId: item.place_id?.toString(),
+    _raw: {
+      source: 'nominatim',
+      ...item,
+    },
+  }));
+}
+
+function mergeAndRankResults(locations: any[], query: string, limit: number): Location[] {
+  const scored = scoreAndFilterResults(locations, query);
+  const unique: any[] = [];
+  const seen = new Set<string>();
+
+  for (const location of scored) {
+    const key = normalizeLocationKey(location.address, location.lat, location.lng);
+    if (seen.has(key)) {
+      continue;
+    }
+    seen.add(key);
+    unique.push(location);
+    if (unique.length >= limit) {
+      break;
+    }
+  }
+
+  return unique.map(({ lat, lng, address, placeId }) => ({
+    lat,
+    lng,
+    address,
+    placeId,
+  }));
+}
+
 /**
  * Score and filter search results for relevance
  */
@@ -106,8 +227,16 @@ function scoreAndFilterResults(locations: any[], query: string): any[] {
     .map(location => {
       let score = 0;
       const address = location.address.toLowerCase();
-      const raw = location._raw;
+      const raw = location._raw || {};
+      const source = raw.source || 'unknown';
       
+      // Source weighting (Photon tends to have better ranking for POIs)
+      if (source === 'photon') {
+        score += 20;
+      } else if (source === 'nominatim') {
+        score += 10;
+      }
+
       // Exact match gets highest score
       if (address.startsWith(lowerQuery)) {
         score += 100;
@@ -122,8 +251,8 @@ function scoreAndFilterResults(locations: any[], query: string): any[] {
       });
       
       // Prefer cities, localities, and landmarks
-      const type = raw.type || '';
-      const placeType = raw.class || '';
+      const type = raw.type || raw.properties?.type || '';
+      const placeType = raw.class || raw.properties?.osm_type || '';
       if (['city', 'town', 'village', 'locality'].includes(type)) {
         score += 30;
       }
@@ -132,7 +261,7 @@ function scoreAndFilterResults(locations: any[], query: string): any[] {
       }
       
       // Prefer places with higher importance
-      const importance = parseFloat(raw.importance) || 0;
+      const importance = parseFloat(raw.importance || raw.properties?.importance || 0);
       score += importance * 50;
       
       // Penalize very long addresses (usually less relevant)
@@ -141,14 +270,26 @@ function scoreAndFilterResults(locations: any[], query: string): any[] {
       }
       
       // Prefer places with names over generic addresses
-      if (raw.name && raw.name.toLowerCase().includes(lowerQuery)) {
+      const rawName = raw.name || raw.namedetails?.name || raw.properties?.name;
+      if (rawName && rawName.toLowerCase().includes(lowerQuery)) {
         score += 25;
+      }
+
+      // Boost proximity matches if available
+      if (raw.properties?.distance) {
+        score += Math.max(0, 10 - raw.properties.distance);
       }
       
       return { ...location, _score: score };
     })
     .filter(location => location._score > 10) // Filter out low-scoring results
     .sort((a, b) => b._score - a._score); // Sort by score descending
+}
+
+function normalizeLocationKey(address: string, lat: number, lng: number): string {
+  const roundedLat = lat.toFixed(4);
+  const roundedLng = lng.toFixed(4);
+  return `${address.toLowerCase().trim()}-${roundedLat}-${roundedLng}`;
 }
 
 /**

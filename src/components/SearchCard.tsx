@@ -278,14 +278,7 @@ export function SearchCard({ onSearch, isLoading = false, className = '' }: Sear
           </Button>
         </form>
 
-        {/* Quick ETA Display */}
-        {pickup && dropoff && (
-          <div className="mt-4 pt-4 border-t border-border">
-            <div className="text-sm text-text-secondary text-center">
-              Distance: ~{Math.round(Math.random() * 5 + 2)}km • ETA: ~{Math.round(Math.random() * 10 + 5)} mins
-            </div>
-          </div>
-        )}
+        {/* Quick ETA Display removed per UI request */}
       </CardContent>
 
       {/* Map Modals */}

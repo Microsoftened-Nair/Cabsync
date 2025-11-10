@@ -1,0 +1,51 @@
+curl 'https://www.uber.com/api/getProducts' \
+  -H 'cookie: sid=QA.CAESEGczVWP2r0U8j_mJbtTtqXoYjq7jyQYiATEqJDVkYTVmNzMxLTA1ZmMtNGY0MS04OTEzLWY5YjhhNzQ3Yjg3MjI8ULL_Domb5sJAHrtrMrEiaoJKTEMl01d3Ptui0sl3pIG1HgG1uRuFDWCaZRw-dSJWRIb9NmlfJGueWUh7OgExQgh1YmVyLmNvbQ.kOz2HTA0GX6vVqnm7dyRw0MZLkBpFgGSJKf9J7qolvg; csid=1.1765332752622.Qn745kpYhzrJsKY/qGSRrgpL3yCC7FG4Me9XaGYs/K4=' \
+  -H 'content-type: application/json' \
+  --data-raw '{
+    "latitude": 18.50039,
+    "longitude": 73.93971
+  }'
+  
+  
+  curl 'https://www.uber.com/api/getProductSuggestions?localeCode=en' \
+  -H 'accept: */*' \
+  -H 'content-type: application/json' \
+  -H 'cookie: sid=QA.CAESEGczVWP2r0U8j_mJbtTtqXoYjq7jyQYiATEqJDVkYTVmNzMxLTA1ZmMtNGY0MS04OTEzLWY5YjhhNzQ3Yjg3MjI8ULL_Domb5sJAHrtrMrEiaoJKTEMl01d3Ptui0sl3pIG1HgG1uRuFDWCaZRw-dSJWRIb9NmlfJGueWUh7OgExQgh1YmVyLmNvbQ.kOz2HTA0GX6vVqnm7dyRw0MZLkBpFgGSJKf9J7qolvg; csid=1.1765333891607.M/I5c/LAsR0hAw0C2nUgPKzS5bb/7VVuAcIn9Z9xUnI=' \
+  -H 'x-csrf-token: x' \
+  -H 'user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' \
+  --data-raw '{
+    "pickup": {
+      "latitude": 18.4878505,
+      "longitude": 74.0234138
+    },
+    "dropoff": {
+      "latitude": 18.5288974,
+      "longitude": 73.8665321
+    }
+  }'
+  
+  
+  
+  
+  curl 'https://m.uber.com/go/graphql' \
+  --compressed \
+  -X POST \
+  -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:145.0) Gecko/20100101 Firefox/145.0' \
+  -H 'Accept: */*' \
+  -H 'Accept-Language: en-US,en;q=0.5' \
+  -H 'Accept-Encoding: gzip, deflate, br, zstd' \
+  -H 'content-type: application/json' \
+  -H 'x-uber-rv-session-type: desktop_session' \
+  -H 'x-uber-rv-initial-load-city-id: 342' \
+  -H 'x-csrf-token: x' \
+  -H 'Origin: https://m.uber.com' \
+  -H 'Alt-Used: m.uber.com' \
+  -H 'Connection: keep-alive' \
+  -H 'Referer: https://m.uber.com/go/product-selection?drop%5B0%5D=%7B%22addressLine1%22%3A%22PUNE%20RAILWAY%20STATION%22%2C%22addressLine2%22%3A%22%E0%A4%AA%E0%A5%81%E0%A4%A3%E0%A5%87%2C%20%E0%A4%AE%E0%A4%B9%E0%A4%BE%E0%A4%B0%E0%A4%BE%E0%A4%B7%E0%A5%8D%E0%A4%9F%E0%A5%8D%E0%A4%B0%22%2C%22id%22%3A%22ChIJq1tdx1_AwjsRnRXKfysrgzI%22%2C%22source%22%3A%22SEARCH%22%2C%22latitude%22%3A18.5288974%2C%22longitude%22%3A73.8665321%2C%22provider%22%3A%22google_places%22%7D&effect=&pickup=%7B%22addressLine1%22%3A%22Loni%20Kalbhor%22%2C%22addressLine2%22%3A%22Maharashtra%22%2C%22id%22%3A%22ChIJq1SjgwXowjsRZplBd83Aacg%22%2C%22source%22%3A%22SEARCH%22%2C%22latitude%22%3A18.4878505%2C%22longitude%22%3A74.0234138%2C%22provider%22%3A%22google_places%22%7D&uclick_id=e383d6c5-2004-4fdb-8b23-3a03d94d78c1' \
+  -H 'Cookie: marketing_vistor_id=d5b554a7-81a6-4850-baf1-3f67dc040f1b; udi-id=D/eqQiQo1DjMIC+0lw8GfyMxgDrbfRsZVfblSPrjAgSDGuE5n4go2Hfx+xk2gu2cfIRVXwvDdxNXv9vLxHqNjdmgK1t4Uz1Bme6uqUGBqpl3Sk4DqSG8GUHktnO6Gdb22LlMuf+WI1+Ef7Dv3G3gj0xnJnXqITds5+zf97r7jngmdSZmvc7ARrAwpGtkoZymDlIDbOYLTLySWigOKqDvIA==TjIS5yylTBsfXgBkl50IuA==0utGmQv2AMDNDtdWrv6wsU0Dp3r6hvpcKArExNo8rfo=; udi-fingerprint=jHek3ZHO8ZFwW7IPfOujUnXuXtZGauDo6o8qC3FYBsPcI/ner2HIPH3Zz4PFLrsAeg9vKvkwybdFFdlZBZ6i9Q==34swGera/qOAGao1DjtTh9U3ZssAHQAxp7jynB7J7U8=; u-cookie-prefs=eyJ2ZXJzaW9uIjoxMDAsImRhdGUiOjE3NTkyMzExNjg5MTMsImNvb2tpZUNhdGVnb3JpZXMiOlsiYWxsIl0sImltcGxpY2l0Ijp0cnVlfQ%3D%3D; UBER_CONSENTMGR=1759231168914|consent:true; CONSENTMGR=1759231168915|consent:true; jwt-session=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InNsYXRlLWV4cGlyZXMtYXQiOjE3NjI3NDM2OTIxMTQsIlVzZXItQWdlbnQiOiIiLCJ4LXViZXItY2xpZW50LWlkIjoiIiwieC11YmVyLWRldmljZSI6IiIsIngtdWJlci1jbGllbnQtdXNlci1zZXNzaW9uLWlkIjoiIiwidGVuYW5jeSI6InViZXIvcHJvZHVjdGlvbiJ9LCJpYXQiOjE3NjI2NjkyOTMsImV4cCI6MTc2Mjc1NTY5M30.VWZDdjXB-fJBDQfRhsqaxVYzPJ9drdY6FDS2YXJbPG8; _cc=AekRVYowJFohkA6BYLjiS2U3; _cid_cc=AekRVYowJFohkA6BYLjiS2U3; city_id_cookie_key=342; __cf_bm=bvBR0.YSwvkjzkPUC53hBTwRsz7dZmoa0QO2dVwTd7Y-1762741854-1.0.1.1-xmOdT7PghvrJL3ZYO8OyfKhbW95n_bLk3OBCGrQ9qZPiFdyos4jqnQWEMRiKabOX2pGVrejZ2fvrEqDcK6hcVyF7wdYwFSArUzA_gcyLmlQ; x-uber-analytics-session-id=18899da2-742d-41f8-8d6d-a7d769e6f395; sid=QA.CAESEGczVWP2r0U8j_mJbtTtqXoYjq7jyQYiATEqJDVkYTVmNzMxLTA1ZmMtNGY0MS04OTEzLWY5YjhhNzQ3Yjg3MjI8ULL_Domb5sJAHrtrMrEiaoJKTEMl01d3Ptui0sl3pIG1HgG1uRuFDWCaZRw-dSJWRIb9NmlfJGueWUh7OgExQgh1YmVyLmNvbQ.kOz2HTA0GX6vVqnm7dyRw0MZLkBpFgGSJKf9J7qolvg; smeta={"expiresAt":1765332750960}; csid=1.1765333891607.M/I5c/LAsR0hAw0C2nUgPKzS5bb/7VVuAcIn9Z9xUnI=; _ua={"session_id":"fda181ca-1476-47a8-adeb-6e5118e4030f","session_time_ms":1762741892113}; mp_adec770be288b16d9008c964acfba5c2_mixpanel=%7B%22distinct_id%22%3A%20%225da5f731-05fc-4f41-8913-f9b8a747b872%22%2C%22%24device_id%22%3A%20%22198dc6ba5735ae-073c8b0c4ee018-43330223-11cc40-198dc6ba57469%22%2C%22%24search_engine%22%3A%20%22google%22%2C%22%24initial_referrer%22%3A%20%22https%3A%2F%2Fwww.google.com%2F%22%2C%22%24initial_referring_domain%22%3A%20%22www.google.com%22%2C%22%24user_id%22%3A%20%225da5f731-05fc-4f41-8913-f9b8a747b872%22%7D' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'TE: trailers' \
+  --data-raw $'{"operationName":"Products","variables":{"includeRecommended":false,"destinations":[{"latitude":18.5288974,"longitude":73.8665321}],"payment":{},"pickup":{"latitude":18.4878505,"longitude":74.0234138}},"query":"query Products($capacity: Int, $destinations: [InputCoordinate\041]\041, $includeRecommended: Boolean = false, $isRiderCurrentUser: Boolean, $payment: InputPayment, $paymentProfileUUID: String, $pickup: InputCoordinate\041, $pickupFormattedTime: String, $profileType: String, $profileUUID: String, $returnByFormattedTime: String, $stuntID: String, $targetProductType: EnumRVWebCommonTargetProductType) {\\n  products(\\n    capacity: $capacity\\n    destinations: $destinations\\n    includeRecommended: $includeRecommended\\n    isRiderCurrentUser: $isRiderCurrentUser\\n    payment: $payment\\n    paymentProfileUUID: $paymentProfileUUID\\n    pickup: $pickup\\n    pickupFormattedTime: $pickupFormattedTime\\n    profileType: $profileType\\n    profileUUID: $profileUUID\\n    returnByFormattedTime: $returnByFormattedTime\\n    stuntID: $stuntID\\n    targetProductType: $targetProductType\\n  ) {\\n    ...ProductsFragment\\n    __typename\\n  }\\n}\\n\\nfragment ProductsFragment on RVWebCommonProductsResponse {\\n  defaultVVID\\n  hourlyTiersWithMinimumFare {\\n    ...HourlyTierFragment\\n    __typename\\n  }\\n  intercity {\\n    ...IntercityFragment\\n    __typename\\n  }\\n  links {\\n    iFrame\\n    text\\n    url\\n    __typename\\n  }\\n  productsUnavailableMessage\\n  tiers {\\n    ...TierFragment\\n    __typename\\n  }\\n  __typename\\n}\\n\\nfragment BadgesFragment on RVWebCommonProductBadge {\\n  backgroundColor\\n  color\\n  contentColor\\n  icon\\n  inactiveBackgroundColor\\n  inactiveContentColor\\n  text\\n  __typename\\n}\\n\\nfragment HourlyTierFragment on RVWebCommonHourlyTier {\\n  description\\n  distance\\n  fare\\n  fareAmountE5\\n  farePerHour\\n  minutes\\n  packageVariantUUID\\n  preAdjustmentValue\\n  __typename\\n}\\n\\nfragment IntercityFragment on RVWebCommonIntercityInfo {\\n  oneWayIntercityConfig(destinations: $destinations, pickup: $pickup) {\\n    ...IntercityConfigFragment\\n    __typename\\n  }\\n  roundTripIntercityConfig(destinations: $destinations, pickup: $pickup) {\\n    ...IntercityConfigFragment\\n    __typename\\n  }\\n  __typename\\n}\\n\\nfragment IntercityConfigFragment on RVWebCommonIntercityConfig {\\n  description\\n  onDemandAllowed\\n  reservePickup {\\n    ...IntercityTimePickerFragment\\n    __typename\\n  }\\n  returnBy {\\n    ...IntercityTimePickerFragment\\n    __typename\\n  }\\n  __typename\\n}\\n\\nfragment IntercityTimePickerFragment on RVWebCommonIntercityTimePicker {\\n  bookingRange {\\n    maximum\\n    minimum\\n    __typename\\n  }\\n  header {\\n    subTitle\\n    title\\n    __typename\\n  }\\n  __typename\\n}\\n\\nfragment TierFragment on RVWebCommonProductTier {\\n  products {\\n    ...ProductFragment\\n    __typename\\n  }\\n  title\\n  __typename\\n}\\n\\nfragment ProductFragment on RVWebCommonProduct {\\n  badges {\\n    ...BadgesFragment\\n    __typename\\n  }\\n  cityID\\n  currencyCode\\n  description\\n  detailedDescription\\n  discountPrimary\\n  displayName\\n  estimatedTripTime\\n  etaStringShort\\n  fares {\\n    capacity\\n    discountPrimary\\n    fare\\n    fareAmountE5\\n    hasPromo\\n    hasRidePass\\n    meta\\n    preAdjustmentValue\\n    __typename\\n  }\\n  hasPromo\\n  hasRidePass\\n  hasBenefitsOnFare\\n  hourly {\\n    tiers {\\n      ...HourlyTierFragment\\n      __typename\\n    }\\n    overageRates {\\n      ...HourlyOverageRatesFragment\\n      __typename\\n    }\\n    __typename\\n  }\\n  iconType\\n  id\\n  is3p\\n  isAvailable\\n  legalConsent {\\n    ...ProductLegalConsentFragment\\n    __typename\\n  }\\n  parentProductUuid\\n  preAdjustmentValue\\n  productImageUrl\\n  productUuid\\n  reserveEnabled\\n  __typename\\n}\\n\\nfragment ProductLegalConsentFragment on RVWebCommonProductLegalConsent {\\n  header\\n  image {\\n    url\\n    width\\n    __typename\\n  }\\n  description\\n  enabled\\n  ctaUrl\\n  ctaDisplayString\\n  buttonLabel\\n  showOnce\\n  shouldBlockRequest\\n  __typename\\n}\\n\\nfragment HourlyOverageRatesFragment on RVWebCommonHourlyOverageRates {\\n  perDistanceUnit\\n  perTemporalUnit\\n  __typename\\n}\\n"}'
+  

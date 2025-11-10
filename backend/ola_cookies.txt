@@ -1,0 +1,15 @@
+# Ola Session Cookies
+# Replace this with your actual Ola session cookies
+# 
+# To get your cookies:
+# 1. Open Firefox/Chrome and go to book.olacabs.com
+# 2. Search for a ride (enter pickup and dropoff)
+# 3. Open Developer Tools (F12) -> Network tab
+# 4. Find the 'category-fare' request
+# 5. Right-click -> Copy -> Copy as cURL
+# 6. Extract the Cookie header value and paste below
+#
+# Example format (all on one line, separated by semicolons):
+# OSRN_v1=o3P1...; _csrf=UYnV4DG...; XSRF-TOKEN=TEOSRwln...; wasc=web-7c78...
+
+OSRN_v1=o3P15tX3wfqgXFY5F4oOOyZl; AKA_A2=A; _csrf=UYnV4DGzSHHTV1NU02s2UXIf; XSRF-TOKEN=TEOSRwln-2lRzt3ecqOJ_TAQ2-RbZjOi-zOA; wasc=web-7c78909f-e6de-4cc4-9655-f9d05d7ab649__AQECAHgfxP3kLfatAqX5D3Wm8Q4cwpCiqFMlbQIth8I9m4HyQQAAANswgdgGCSqGSIb3DQEHBqCByjCBxwIBADCBwQYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAwZ6am%2BmGcOP5qsTKYCARCAgZMhxSd0QTdhicPs7q8amtwCGg09%2BcOnw1xFczIAxyPtFXYBGt7p63qbCeN%2FXJpSQH%2Bb%2BQPS1IkDnIUkNx0%2FcQJxrIL%2F9zfs%2F%2FRIV9aKRlQRDucCo5pWbiri%2B%2FEz%2Fu4xdzvLHK7CEQyLAM%2FmOsXo%2FBih5rRy6QlH8OlvASPzJ2OX%2FaOkECb9BPZLnSvh4JyPZoMpxrA%3D' 

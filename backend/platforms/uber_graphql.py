@@ -310,8 +310,12 @@ fragment HourlyOverageRatesFragment on RVWebCommonHourlyOverageRates {
                     
                     fare_info = fares[0]  # First fare option
                     
+                    # Get service name and add Uber prefix if not present
+                    display_name = product.get('displayName', 'Unknown')
+                    name = display_name if display_name.startswith('Uber') else f'Uber {display_name}'
+                    
                     ride = {
-                        'name': product.get('displayName', 'Unknown'),
+                        'name': name,
                         'description': product.get('detailedDescription', product.get('description', '')),
                         'price': fare_info.get('fare', 'N/A'),
                         'currency': product.get('currencyCode', 'INR'),

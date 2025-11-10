@@ -47,10 +47,10 @@ export default function RidesPage() {
                     <div className="text-sm text-text-secondary">Cheapest</div>
                   </div>
                   <div>
-                    <div className="text-lg font-semibold text-text-primary">
+                    {/* <div className="text-lg font-semibold text-text-primary">
                       {Math.min(...results.map((r) => Math.round(r.eta.seconds / 60)))}m
                     </div>
-                    <div className="text-sm text-text-secondary">Fastest</div>
+                    <div className="text-sm text-text-secondary">Fastest</div> */}
                   </div>
                 </div>
               </div>

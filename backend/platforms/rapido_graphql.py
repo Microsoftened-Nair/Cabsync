@@ -306,7 +306,7 @@ class RapidoAPIClient:
                     'price': price_str,
                     'price_min': price_min,
                     'price_max': price_max,
-                    'currency': 'INR',
+                    'currency': '₹',
                     'eta': 'N/A',  # ETA not included in this response
                     'provider': 'Rapido',
                     'ride_id': ride_id,

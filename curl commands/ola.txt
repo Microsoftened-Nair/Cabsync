@@ -1,0 +1,17 @@
+curl 'https://book.olacabs.com/data-api/category-fare/p2p?pickupLat=18.52862&pickupLng=73.87467&pickupMode=NOW&leadSource=desktop_website&dropLat=18.4866&dropLng=74.0251&silent=true&defaultPickupPointId=970015369&pickupZoneId=970010190' \
+  --compressed \
+  -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:145.0) Gecko/20100101 Firefox/145.0' \
+  -H 'Accept: application/json' \
+  -H 'Accept-Language: en-US,en;q=0.5' \
+  -H 'Accept-Encoding: gzip, deflate, br, zstd' \
+  -H 'Referer: https://book.olacabs.com/?serviceType=p2p&utm_source=widget_on_olacabs&drop_lat=18.4866&drop_lng=74.0251&drop_name=Saptasajai%20Aangan%2C%20Loni%20Kalbhor%2C%20Maharashtra%2C%20412201%2C%20India&lat=18.52862&lng=73.87467&pickup_name=Pune%20Railway%20Station%20Main%20Gate%2C%20His%20Highness%20The%20Prince%20Aga%20Khan%20Marg%2C%20Somwar%20Peth%2C%20Pune%20City%2C%20Pune%2C%20Maharashtra%2C%20411001%2C%20India&pickup=' \
+  -H 'content-type: application/json' \
+  -H 'x-requested-with: XMLHttpRequest' \
+  -H 'x-fingerprint-id: 5039789795' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'Connection: keep-alive' \
+  -H 'Alt-Used: book.olacabs.com' \
+  -H 'Cookie: OSRN_v1=o3P15tX3wfqgXFY5F4oOOyZl; AKA_A2=A; _csrf=UYnV4DGzSHHTV1NU02s2UXIf; XSRF-TOKEN=TEOSRwln-2lRzt3ecqOJ_TAQ2-RbZjOi-zOA; wasc=web-7c78909f-e6de-4cc4-9655-f9d05d7ab649__AQECAHgfxP3kLfatAqX5D3Wm8Q4cwpCiqFMlbQIth8I9m4HyQQAAANswgdgGCSqGSIb3DQEHBqCByjCBxwIBADCBwQYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAwZ6am%2BmGcOP5qsTKYCARCAgZMhxSd0QTdhicPs7q8amtwCGg09%2BcOnw1xFczIAxyPtFXYBGt7p63qbCeN%2FXJpSQH%2Bb%2BQPS1IkDnIUkNx0%2FcQJxrIL%2F9zfs%2F%2FRIV9aKRlQRDucCo5pWbiri%2B%2FEz%2Fu4xdzvLHK7CEQyLAM%2FmOsXo%2FBih5rRy6QlH8OlvASPzJ2OX%2FaOkECb9BPZLnSvh4JyPZoMpxrA%3D' \
+  -H 'TE: trailers'
