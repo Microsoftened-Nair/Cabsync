@@ -19,132 +19,222 @@ A modern ride aggregator that compares fares and ETAs across Uber, Ola, Rapido, 
 ## Tech Stack
 
 ### Frontend
-- **React 18** with TypeScript
-- **TailwindCSS** for styling
-- **Framer Motion** for animations
-- **React Query** for server state management
-- **React Hook Form** for form handling
-- **Lucide React** for icons
-- **Mapbox GL** for maps
+````markdown
+# cabsync
 
-### Backend
-- **FastAPI** (Python) serving curated ride samples
-- **Deterministic price/ETA synthesis** based on provider rate cards
-- **OAuth2** placeholders for future Uber integration
-- **CORS** and response normalization helpers
+A modern ride aggregator that compares fares and ETAs across Uber, Ola, Rapido, and inDrive with a beautiful dark-mode interface.
 
-## Quick Start
+## What this update adds
+- A very detailed, step-by-step installation and run guide so even a beginner (or a pre-teen!) can get the app running locally.
 
-### Prerequisites
-- Node.js 18+
-- Python 3.8+
-- npm or yarn
+## Quick Overview (what you will do)
+1. Install Node.js and npm (for the frontend)
+2. Install Python and create a virtual environment (for the backend)
+3. Install frontend and backend dependencies
+4. Run frontend and backend locally and visit the app in your browser
 
-### Installation
+---
 
-1. **Clone and install frontend dependencies:**
+## Very Detailed Installation Guide (Linux / bash)
+
+This guide assumes you are on Linux and using the `bash` shell. Copy and paste the commands one-by-one into a terminal. If a step fails, the guide tells you how to check and what to do next.
+
+### 1) Open a terminal
+- On Linux press Ctrl+Alt+T or open your terminal application.
+
+### 2) Clone the repository (if you haven't already)
+Replace `your-username` with your GitHub username if you forked it, otherwise use the repo URL.
+
 ```bash
-npm install
+# Clone the project into a folder named cabsync
+git clone https://github.com/Microsoftened-Nair/Cabsync.git cabsync
+cd cabsync
+pwd  # Confirm you're in the project folder
 ```
 
-2. **Set up Python backend:**
+If `git` is not installed, install it first (example for Debian/Ubuntu):
+```bash
+sudo apt update
+sudo apt install -y git
+```
+
+### 3) Install Node.js (required for the frontend)
+We recommend Node.js 18 or newer. If you already have `node -v` >= 18, skip this step.
+
+Option A — install via NodeSource (recommended):
+```bash
+# Download and run NodeSource install script for Node 18
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Verify versions
+node -v
+npm -v
+```
+
+Option B — use your package manager or nvm if you prefer. If you use Windows, follow Node installers on nodejs.org.
+
+### 4) Install Python 3 and pip (required for the backend)
+We recommend Python 3.8 or newer. Check your version:
+```bash
+python3 --version
+```
+
+If Python is missing on Debian/Ubuntu:
+```bash
+sudo apt update
+sudo apt install -y python3 python3-venv python3-pip
+```
+
+### 5) Create a Python virtual environment for the backend
+We keep backend dependencies isolated using a virtual environment.
+
 ```bash
 cd backend
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# Create a virtual environment named 'virt' (you can name it venv if you like)
+python3 -m venv virt
+
+# Activate the virtual environment (this changes your prompt)
+source virt/bin/activate
+
+# You should now see (virt) in your terminal prompt.
+```
+
+If `source virt/bin/activate` fails, check that `virt/bin/activate` exists and that Python created the environment.
+
+### 6) Install backend Python dependencies
+With the virtual environment activated:
+
+```bash
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-3. **Environment setup:**
+If you see permission errors, make sure the virtualenv is activated (the prompt shows `(virt)`).
+
+### 7) Install frontend dependencies
+Open a new terminal tab or window, or stop the virtualenv activation (you can have both frontend and backend terminals). From the project root (not the `backend` folder):
+
 ```bash
-# Copy environment templates
-cp .env.example .env
-cp backend/.env.example backend/.env
+cd ..  # back to project root if you were in backend
+npm install
 ```
 
-4. **Configure environment variables:**
+This installs everything the frontend needs (React, TailwindCSS, Vite, etc.).
 
-**.env** (Frontend):
-```env
-VITE_API_BASE_URL=http://localhost:8000
-VITE_MAPBOX_TOKEN=your_mapbox_token_here  # Optional - works without it in MOCK mode
-VITE_MODE=MOCK  # Use MOCK for development, LIVE for production with API key
+### 8) Environment files (optional but recommended)
+There may be example environment files in the repo. Copy them if you need to set environment variables.
+
+```bash
+# From project root
+cp .env.example .env 2>/dev/null || true
+cp backend/.env.example backend/.env 2>/dev/null || true
+
+# Edit the files if you need (use nano, vim, or a GUI editor):
+nano .env
+nano backend/.env
 ```
 
-> **Note:** The app works out of the box in MOCK mode without a Mapbox API key. For production use with real geocoding and maps, get a free API key from [Mapbox](https://account.mapbox.com/access-tokens/). See [MAP_SETUP.md](./MAP_SETUP.md) for detailed instructions.
+Notes:
+- `VITE_API_BASE_URL` should be `http://localhost:8000` during local development.
+- By default the project supports `MOCK` mode so a Mapbox token is not strictly required.
 
-**backend/.env** (Backend):
-```env
-# Uber API
-UBER_CLIENT_ID=your_uber_client_id
-UBER_CLIENT_SECRET=your_uber_client_secret
-UBER_REDIRECT_URI=http://localhost:8000/auth/uber/callback
+### 9) Run the backend server
+Make sure you're in the `backend` directory and the virtualenv is activated.
 
-# Mapbox (for geocoding)
-MAPBOX_ACCESS_TOKEN=your_mapbox_token
-
-# App settings
-MODE=MOCK  # Set to LIVE for production
-SECRET_KEY=your-secret-key-here
-REDIS_URL=redis://localhost:6379
+```bash
+cd backend
+source virt/bin/activate  # activate if not already active
+# Start backend (FastAPI via Uvicorn)
+python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### Development
+If the server starts successfully you'll see output that Uvicorn is running and listening on port 8000.
 
-**Option 1: Run both frontend and backend together:**
+You can quickly test the backend health endpoint in another terminal:
+```bash
+curl http://localhost:8000/api/health
+```
+
+### 10) Run the frontend dev server
+Open another terminal (frontend runs separately) and start the Vite dev server:
+
+```bash
+cd <path-to-cabsync-root>  # change back to the project root
+npm run dev
+```
+
+The frontend usually runs on http://localhost:5173. Open that URL in your browser.
+
+### 11) Run both frontend and backend together (shortcut)
+From the project root you can run both with one command (uses `concurrently`):
+
 ```bash
 npm run dev:full
 ```
 
-**Option 2: Run separately:**
-```bash
-# Terminal 1 - Backend
-npm run backend
+This opens two processes: the frontend dev server and the backend server.
 
-# Terminal 2 - Frontend  
-npm run dev
+### 12) Build for production (optional)
+To generate a production-ready frontend bundle:
+
+```bash
+npm run build
 ```
 
-Visit http://localhost:5173 to see the app.
+To run a production-preview of the frontend:
 
-## Map & Location Features
+```bash
+npm run preview
+```
 
-The app includes a fully functional map-based location picker:
+### 13) Run tests
+The project includes frontend tests (Vitest). Run:
 
-### Without API Key (MOCK Mode)
-- Works immediately with pre-loaded locations for major Indian cities
-- Text search with autocomplete
-- Includes Delhi NCR, Mumbai, Bangalore, Chennai, Kolkata, Hyderabad, Pune, and Ahmedabad
+```bash
+npm run test
+```
 
-### With Mapbox API Key (LIVE Mode)
-- Interactive map for selecting any location in India
-- Click anywhere on the map to select a location
-- Drag markers to fine-tune positions
-- Real-time reverse geocoding (coordinates → addresses)
-- Use current location feature
-- Search with autocomplete for any Indian location
-- 50,000 free requests/month on Mapbox free tier
+### 14) Common troubleshooting
+- If `npm install` fails: make sure `node` and `npm` are installed and you have a working internet connection.
+- If backend `pip install -r requirements.txt` fails: activate virtualenv and use `pip --version` to check which pip is active.
+- If ports are already in use: check which process is using it (`sudo lsof -i :8000`) and stop that process or change the port.
+- If the frontend shows a blank page: open the browser console (F12) and check for error messages; ensure the backend is running at `VITE_API_BASE_URL`.
 
-**Setup Guide:** See [MAP_SETUP.md](./MAP_SETUP.md) for complete instructions on setting up Mapbox integration.
-
-## API Endpoints
-
-- `GET /api/health` — basic readiness probe with provider count.
-- `POST /api/compare` — returns normalized ride options across Uber, Ola, Rapido, and inDrive.
-- `GET /api/providers` — exposes the sample provider catalogue used for mock comparisons.
-
-## API Modes
-
-### MOCK Mode (Default)
-- Backend serves deterministic sample data sourced from curated Uber/Ola/Rapido/inDrive rate cards
-- No API keys required
-- Perfect for UI development and testing; frontend falls back to the same dataset if the API is offline
-
-### LIVE Mode
-- Placeholder for real provider integrations (Uber OAuth scaffolding is in place)
-- Requires proper OAuth setup before enabling in production environments
-- Extend `generate_sample_results` with real API calls when credentials are available
+### 15) Notes for Windows users
+- Use PowerShell for running commands. Activate virtualenv on Windows with `virt\Scripts\Activate.ps1` or `virt\Scripts\activate` depending on shell.
+- For Node installation on Windows use the installer from nodejs.org.
 
 ---
 
-Made with ❤️ to help you find the best ride options.
+## Short Reference of Useful Commands
+
+```bash
+# Clone the repo
+git clone https://github.com/Microsoftened-Nair/Cabsync.git
+
+# Frontend (project root)
+npm install
+npm run dev         # start frontend dev server
+npm run build       # build frontend for production
+
+# Backend (backend folder)
+python3 -m venv virt
+source virt/bin/activate
+pip install -r requirements.txt
+python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
+# Run both together
+npm run dev:full
+
+# Run tests
+npm run test
+```
+
+---
+
+If anything in these steps is unclear or you hit an error, tell me the exact command you ran and the full terminal output — I will help debug it step-by-step.
+
+Made with ❤️ to help you get started quickly.
+
+````
